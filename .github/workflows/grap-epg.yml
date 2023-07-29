@@ -1,21 +1,31 @@
-name: Update and merge EPG
+name: Grab EPG
 on: [push]
 jobs:
-  update-epg:
+  grab_epg:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout epg repository
         uses: actions/checkout@v2
+        with:
+          repository: iptv-org/epg
+          ref: master
+
       - name: Install dependencies
-        run: npm install
-      - name: Update EPG
-        run: cd ${{ github.workspace }} && SITE=superguidatv.it,tvguide.com,tv.yandex.ru npm run grab
-  merge-epg:
-    runs-on: ubuntu-latest
-    needs: update-epg
-    steps:
-      - name: Merge EPG
         run: |
-          cat output/superguidatv.it-$(date +%Y%m%d).xml > merged.xml
-          tail -n +2 output/tvguide.com-$(date +%Y%m%d).xml | sed 's/^<tv>/<!-- tvguide.com --><tv>/' >> merged.xml
-          tail -n +2 output/tv.yandex.ru-$(date +%Y%m%d).xml | sed 's/^<tv>/<!-- tv.yandex.ru --><tv>/' >> merged.xml
+          cd epg
+          npm install
+
+      - name: Grab EPG from site 1
+        run: |
+          cd epg
+          SITE=superguidatv.it npm run grab
+
+      - name: Grab EPG from site 2
+        run: |
+          cd epg
+          SITE=tvguide.com npm run grab
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'Grab EPG updates'
