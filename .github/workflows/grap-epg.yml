@@ -13,7 +13,7 @@ jobs:
         run: SITE=superguidatv.it npm run grab
 
       - name: Grab EPG from site 2
-        run: SITE=tvguide.com npm run grab
+        run: SITE=tvtv.us npm run grab
 
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v4
