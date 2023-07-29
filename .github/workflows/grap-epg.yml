@@ -4,26 +4,16 @@ jobs:
   grab_epg:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout epg repository
+      - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          repository: iptv-org/epg
-          ref: master
-
       - name: Install dependencies
-        run: |
-          cd epg
-          npm install
+        run: npm install
 
       - name: Grab EPG from site 1
-        run: |
-          cd epg
-          SITE=superguidatv.it npm run grab
+        run: SITE=superguidatv.it npm run grab
 
       - name: Grab EPG from site 2
-        run: |
-          cd epg
-          SITE=tvguide.com npm run grab
+        run: SITE=tvguide.com npm run grab
 
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v4
