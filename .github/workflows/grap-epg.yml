@@ -9,8 +9,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Grab EPG from site 1
-        run: SITE=superguidatv.it npm run grab
+#       - name: Grab EPG from site 1
+#         run: SITE=superguidatv.it npm run grab
 
       - name: Grab EPG from site 2
         run: SITE=tvtv.us npm run grab
