@@ -1,0 +1,21 @@
+name: Update and merge EPG
+on: [push]
+jobs:
+  update-epg:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm install
+      - name: Update EPG
+        run: cd ${{ github.workspace }} && SITE=superguidatv.it,tvguide.com,tv.yandex.ru npm run grab
+  merge-epg:
+    runs-on: ubuntu-latest
+    needs: update-epg
+    steps:
+      - name: Merge EPG
+        run: |
+          cat output/superguidatv.it-$(date +%Y%m%d).xml > merged.xml
+          tail -n +2 output/tvguide.com-$(date +%Y%m%d).xml | sed 's/^<tv>/<!-- tvguide.com --><tv>/' >> merged.xml
+          tail -n +2 output/tv.yandex.ru-$(date +%Y%m%d).xml | sed 's/^<tv>/<!-- tv.yandex.ru --><tv>/' >> merged.xml
